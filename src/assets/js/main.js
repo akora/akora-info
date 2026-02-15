@@ -8,7 +8,7 @@ const stickyClassesContainer = [
 	"border-neutral-300/50",
 	"bg-white/80",
 	"dark:border-neutral-600/40",
-	"dark:bg-neutral-900/60",
+	"dark:bg-[#121212]/60",
 	"backdrop-blur-2xl",
 ];
 const unstickyClassesContainer = ["border-transparent"];
