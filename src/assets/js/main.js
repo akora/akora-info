@@ -17,14 +17,22 @@ let headerElement = null;
 document.addEventListener("DOMContentLoaded", () => {
 	headerElement = document.getElementById("header");
 
-	if (localStorage.getItem("dark_mode") === "false") {
+	const savedThemePreference = localStorage.getItem("dark_mode");
+	const prefersDarkMode =
+		window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+	if (savedThemePreference === "false") {
 		window.darkMode = false;
 		document.documentElement.classList.remove("dark");
 		showDay();
-	} else {
+	} else if (savedThemePreference === "true" || prefersDarkMode) {
 		window.darkMode = true;
 		document.documentElement.classList.add("dark");
 		showNight();
+	} else {
+		window.darkMode = false;
+		document.documentElement.classList.remove("dark");
+		showDay();
 	}
 	stickyHeaderFuncionality();
 	applyMenuItemClasses();

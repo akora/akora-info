@@ -33,7 +33,10 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <!-- Used to add dark mode right away, adding here prevents any flicker -->
     <script is:inline>
       if (typeof Storage !== 'undefined') {
-        if (localStorage.getItem('dark_mode') !== 'false') {
+        const savedThemePreference = localStorage.getItem('dark_mode')
+        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+
+        if (savedThemePreference === 'true' || (!savedThemePreference && prefersDarkMode)) {
           document.documentElement.classList.add('dark')
         }
       }
