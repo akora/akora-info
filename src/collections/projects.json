@@ -1,0 +1,56 @@
+[
+	{
+		"name": "Airborne Observer",
+		"description": "Next generation aerial capture",
+		"image": "/assets/images/projects/airborne.observer-1280x720.png",
+		"url": "https://airborne.observer"
+	},
+	{
+		"name": "akora.dev",
+		"description": "Personal software development blog",
+		"image": "/assets/images/projects/akora.dev-1280x720.png",
+		"url": "https://akora.dev"
+	},
+	{
+		"name": "andraskora.com",
+		"description": "Main personal website and blog",
+		"image": "/assets/images/projects/andraskora.com-1280x720.png",
+		"url": "https://andraskora.com"
+	},
+	{
+		"name": "Digital Readiness",
+		"description": "Digital readiness for families",
+		"image": "/assets/images/projects/digitalreadiness.substack.com-1280x720.png",
+		"url": "https://digitalreadiness.substack.com"
+	},
+	{
+		"name": "FocusUI",
+		"description": "New UI paradigm",
+		"image": "/assets/images/projects/focusui.io-1280x720.png",
+		"url": "https://focusui.io"
+	},
+	{
+		"name": "g100w.com",
+		"description": "Also known as 'the GLOW'",
+		"image": "/assets/images/projects/g100w.com-1280x720.png",
+		"url": "https://g100w.com"
+	},
+	{
+		"name": "LifeRevise",
+		"description": "A blog for personal improvements",
+		"image": "/assets/images/projects/liferevise.com-1280x720.png",
+		"url": "https://liferevise.com"
+	},
+	{
+		"name": "ProvisionEdge",
+		"description": "Local-first, decentralized systems",
+		"image": "/assets/images/projects/provisionedge.com-1280x720.png",
+		"url": "https://provisionedge.com"
+	},
+	{
+		"name": "Vibestuck",
+		"description": "Unstuck your vibe-coded projects",
+		"image": "/assets/images/projects/vibestuck.com-1280x720.png",
+		"url": "https://vibestuck.com"
+	}
+]

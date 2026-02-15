@@ -1,0 +1,32 @@
+[build]
+  command = "pnpm build"
+  publish = "dist"
+
+[[redirects]]
+  from = "https://www.akora.info/*"
+  to = "https://akora.info/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/posts"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/post/*"
+  to = "/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 302

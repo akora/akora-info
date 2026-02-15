@@ -1,0 +1,125 @@
+---
+const feed = "https://andraskora.com/rss/";
+const postLimit = 5;
+
+type FeedItem = {
+  title: string;
+  link: string;
+  date: string;
+  excerpt: string;
+};
+
+function extractTag(content: string, tag: string) {
+  const match = content.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"));
+  return match?.[1]?.trim() || "";
+}
+
+function removeCdata(content: string) {
+  return content.replace(/^<!\[CDATA\[/, "").replace(/\]\]>$/, "");
+}
+
+function stripHtml(content: string) {
+  return content.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function decodeEntities(content: string) {
+  const namedEntities: Record<string, string> = {
+    amp: "&",
+    apos: "'",
+    quot: '"',
+    lt: "<",
+    gt: ">",
+    nbsp: " ",
+  };
+
+  return content.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, (match, entity) => {
+    if (entity.startsWith("#x") || entity.startsWith("#X")) {
+      const codePoint = Number.parseInt(entity.slice(2), 16);
+      return Number.isNaN(codePoint) ? match : String.fromCodePoint(codePoint);
+    }
+
+    if (entity.startsWith("#")) {
+      const codePoint = Number.parseInt(entity.slice(1), 10);
+      return Number.isNaN(codePoint) ? match : String.fromCodePoint(codePoint);
+    }
+
+    return namedEntities[entity] ?? match;
+  });
+}
+
+function formatDate(content: string) {
+  const date = new Date(content);
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+let items: FeedItem[] = [];
+
+try {
+  const response = await fetch(feed);
+  if (response.ok) {
+    const xml = await response.text();
+    const itemBlocks = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)].slice(0, postLimit);
+
+    items = itemBlocks.map((entry) => {
+      const content = entry[1] || "";
+      const title = decodeEntities(stripHtml(removeCdata(extractTag(content, "title"))));
+      const link = removeCdata(extractTag(content, "link"));
+      const pubDate = removeCdata(extractTag(content, "pubDate"));
+      const description = removeCdata(extractTag(content, "description"));
+      const contentEncoded = removeCdata(extractTag(content, "content:encoded"));
+      const rawExcerpt = decodeEntities(stripHtml(contentEncoded || description));
+      const excerpt = rawExcerpt.length > 160 ? `${rawExcerpt.slice(0, 157)}...` : rawExcerpt;
+
+      return {
+        title,
+        link,
+        date: formatDate(pubDate),
+        excerpt,
+      };
+    }).filter((entry) => entry.title && entry.link);
+  }
+} catch {
+  items = [];
+}
+---
+
+<section class="max-w-4xl mx-auto px-7 lg:px-0">
+  <h2 class="text-2xl font-bold leading-10 tracking-tight text-neutral-900 dark:text-neutral-100">Latest from andraskora.com</h2>
+  <p class="mb-6 text-base text-neutral-600 dark:text-neutral-400">
+    Recent posts from my main blog via RSS.
+  </p>
+
+  {
+    items.length > 0 ? (
+      <div class="space-y-5">
+        {
+          items.map((item) => (
+            <a
+              href={item.link}
+              target="_blank"
+              class="block p-5 border border-dashed rounded-2xl border-neutral-300 dark:border-neutral-600 hover:border-neutral-500 dark:hover:border-neutral-400 transition-colors"
+            >
+              <p class="text-sm text-neutral-500 dark:text-neutral-400">{item.date}</p>
+              <h3 class="mt-1 text-lg font-semibold text-neutral-900 dark:text-neutral-100">{item.title}</h3>
+              <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-300">{item.excerpt}</p>
+            </a>
+          ))
+        }
+      </div>
+    ) : (
+      <div class="p-5 border border-dashed rounded-2xl border-neutral-300 dark:border-neutral-600">
+        <p class="text-sm text-neutral-600 dark:text-neutral-300">
+          Feed is temporarily unavailable. You can still read all posts directly on
+          <a class="font-semibold underline" href="https://andraskora.com" target="_blank"> andraskora.com</a>.
+        </p>
+      </div>
+    )
+  }
+</section>
