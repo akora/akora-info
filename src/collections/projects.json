@@ -36,6 +36,12 @@
 		"url": "https://g100w.com"
 	},
 	{
+		"name": "l4n.io",
+		"description": "Multi-Tier Home Lab",
+		"image": "/assets/images/projects/home.l4n.io-1280x720.png",
+		"url": "https://akora.dev/series/multi-tier-home-lab/"
+	},
+	{
 		"name": "LifeRevise",
 		"description": "A blog for personal improvements",
 		"image": "/assets/images/projects/liferevise.com-1280x720.png",
