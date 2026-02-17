@@ -36,7 +36,8 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
         const savedThemePreference = localStorage.getItem('dark_mode')
         const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
 
-        if (savedThemePreference === 'true' || (!savedThemePreference && prefersDarkMode)) {
+        // Always start in dark mode unless explicitly set to light mode
+        if (savedThemePreference !== 'false') {
           document.documentElement.classList.add('dark')
         }
       }

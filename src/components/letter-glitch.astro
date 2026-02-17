@@ -1,0 +1,36 @@
+---
+export interface Props {
+  containerId?: string;
+  glitchColors?: string[];
+  glitchSpeed?: number;
+  lines?: number;
+  smooth?: boolean;
+  className?: string;
+}
+
+const {
+  containerId = 'letter-glitch-' + Math.random().toString(36).substr(2, 9),
+  glitchColors = ['#5e4491', '#A476FF', '#241a38'],
+  glitchSpeed = 33,
+  lines = 2,
+  smooth = true,
+  className = ''
+} = Astro.props;
+
+// Generate unique ID for this instance
+const uniqueId = containerId;
+---
+
+<div 
+  id={uniqueId}
+  class={`glitch-container lines-${lines} ${className}`}
+  data-letter-glitch
+  data-colors={glitchColors.join(',')}
+  data-speed={glitchSpeed.toString()}
+  data-lines={lines.toString()}
+></div>
+
+<script>
+  import '../assets/css/letter-glitch.css';
+  import '../assets/js/letter-glitch.js';
+</script>
