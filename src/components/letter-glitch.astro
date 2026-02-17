@@ -5,6 +5,7 @@ export interface Props {
   glitchSpeed?: number;
   lines?: number;
   smooth?: boolean;
+  useRandomScheme?: boolean;
   className?: string;
 }
 
@@ -14,6 +15,7 @@ const {
   glitchSpeed = 33,
   lines = 2,
   smooth = true,
+  useRandomScheme = false,
   className = ''
 } = Astro.props;
 
@@ -25,9 +27,10 @@ const uniqueId = containerId;
   id={uniqueId}
   class={`glitch-container lines-${lines} ${className}`}
   data-letter-glitch
-  data-colors={glitchColors.join(',')}
+  data-colors={useRandomScheme ? '' : glitchColors.join(',')}
   data-speed={glitchSpeed.toString()}
   data-lines={lines.toString()}
+  data-use-random-scheme={useRandomScheme.toString()}
 ></div>
 
 <script>

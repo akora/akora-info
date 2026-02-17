@@ -2,6 +2,11 @@
  * Letter Glitch Effect - Embeddable Library
  * Add animated glitch text effects to any website
  */
+
+/* Logic adapted from LetterGlitch (MIT License)
+   Original by Gothsec: github.com/Gothsec/Astro-portfolio
+*/
+
 class LetterGlitch {
     constructor(containerId, options = {}) {
         this.container = document.getElementById(containerId);
@@ -10,7 +15,30 @@ class LetterGlitch {
             return;
         }
 
-        this.glitchColors = options.glitchColors || ['#5e4491', '#A476FF', '#241a38'];
+        // Predefined color schemes (original 4 from letter-glitch)
+        this.colorSchemes = [
+            ['#5e4491', '#A476FF', '#241a38'], // Purple theme (original)
+            ['#1a5e3e', '#4ade80', '#0f2818'], // Green theme
+            ['#7e1e1e', '#ef4444', '#3d1010'], // Red theme
+            ['#1e3a5f', '#60a5fa', '#0f172a']  // Blue/Grayish blue theme
+        ];
+
+        // Use provided colors or cycle through schemes
+        if (options.glitchColors && options.glitchColors.length > 0 && options.glitchColors[0] !== '') {
+            this.glitchColors = options.glitchColors;
+            console.log('LetterGlitch: Using provided colors:', this.glitchColors);
+        } else if (options.useRandomScheme !== false) {
+            // Cycle through schemes using session storage to persist across reloads
+            const currentIndex = parseInt(sessionStorage.getItem('letterGlitchSchemeIndex') || '0');
+            const nextIndex = (currentIndex + 1) % this.colorSchemes.length;
+            sessionStorage.setItem('letterGlitchSchemeIndex', nextIndex.toString());
+            this.glitchColors = this.colorSchemes[nextIndex];
+            console.log('LetterGlitch: Using cycled scheme (index', nextIndex, '):', this.glitchColors);
+        } else {
+            this.glitchColors = this.colorSchemes[0]; // Default to first scheme
+            console.log('LetterGlitch: Using default scheme:', this.glitchColors);
+        }
+
         this.glitchSpeed = options.glitchSpeed || 33;
         this.smooth = options.smooth !== false;
         this.charWidth = 10;
@@ -151,13 +179,23 @@ window.createLetterGlitch = function(containerId, options = {}) {
 // Auto-initialize if data attributes are present
 document.addEventListener('DOMContentLoaded', () => {
     const glitchContainers = document.querySelectorAll('[data-letter-glitch]');
-    glitchContainers.forEach(container => {
+    console.log('LetterGlitch: Found', glitchContainers.length, 'glitch containers');
+    
+    glitchContainers.forEach((container, index) => {
         const options = {};
         const colors = container.dataset.colors;
         const speed = container.dataset.speed;
         const lines = container.dataset.lines;
+        const useRandomScheme = container.dataset.useRandomScheme;
         
-        if (colors) {
+        console.log('LetterGlitch: Container', index, 'data:', {
+            colors,
+            speed,
+            lines,
+            useRandomScheme
+        });
+        
+        if (colors && colors.trim() !== '') {
             options.glitchColors = colors.split(',').map(c => c.trim());
         }
         if (speed) {
@@ -166,7 +204,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lines) {
             options.lines = parseInt(lines);
         }
+        if (useRandomScheme) {
+            options.useRandomScheme = useRandomScheme === 'true';
+        }
         
+        console.log('LetterGlitch: Creating instance with options:', options);
         new LetterGlitch(container.id, options);
     });
 });

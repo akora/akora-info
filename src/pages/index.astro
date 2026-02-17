@@ -49,20 +49,20 @@ const showBlogFeed = false;
   </div>
 
   <div class="relative w-full max-w-4xl mx-auto px-7 xl:px-0">
-    <div class="absolute -top-3.5 left-0 dark:hidden z-10">
+    <div class="absolute -top-4 left-0 dark:hidden z-10">
       <p class="text-xs text-neutral-500 italic">
-        Switch to night mode, it looks much cooler!
+        Switch to night mode, it looks so much cooler!
       </p>
     </div>
     <LetterGlitch 
       className="w-full" 
-      glitchColors={['#5e4491', '#A476FF', '#241a38']} 
+      useRandomScheme={true}
       lines={4} 
       glitchSpeed={50}
     />
   </div>
 
-  <Separator text="Projects" spacingClass="my-24" />
+  <Separator text="Projects" spacingClass="my-24" targetId="projects" />
   <Projects />
   {
     showBlogFeed && (

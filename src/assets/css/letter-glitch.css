@@ -3,6 +3,10 @@
  * Required styles for the letter glitch animation
  */
 
+/* Logic adapted from LetterGlitch (MIT License)
+   Original by Gothsec: github.com/Gothsec/Astro-portfolio
+*/
+
 .glitch-container {
     position: relative;
     width: 100%;
