@@ -14,7 +14,7 @@ const { text, spacingClass = "my-32", targetId = null } = Astro.props;
     </div>
   </div>
   <div
-    class={`absolute flex items-center justify-center w-auto h-auto px-3 py-1.5 uppercase tracking-widest space-x-1 text-[0.6rem] md:-translate-x-1/2 -translate-y-1/2 border rounded-full bg-white dark:bg-neutral-800 text-neutral-400 left-0 md:ml-0 ml-5 md:left-1/2 border-neutral-100 dark:border-neutral-800 shadow-sm ${targetId ? 'cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors duration-200' : ''}`}
+    class={`absolute flex items-center justify-center w-auto h-auto px-3 py-1.5 uppercase tracking-widest space-x-1 text-[0.6rem] -translate-x-1/2 -translate-y-1/2 border rounded-full bg-white dark:bg-neutral-800 text-neutral-400 left-1/2 border-neutral-100 dark:border-neutral-800 shadow-sm ${targetId ? 'cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors duration-200' : ''}`}
     onclick={targetId ? `const element = document.getElementById('${targetId}'); const offset = 120; window.scrollTo({ top: element.offsetTop - offset, behavior: 'smooth' })` : ''}
   >
     <p class="leading-none">{text}</p>
