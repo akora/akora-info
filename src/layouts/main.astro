@@ -73,7 +73,7 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <script src="../assets/css/main.css"></script>
     <Fragment set:html={import.meta.env.HEADER_INJECT} />
   </head>
-  <body class="antialiased bg-white dark:bg-[#121212]">
+  <body class="antialiased bg-white dark:bg-[#121212] overflow-x-hidden">
     <SquareLines />
     <Header />
     <slot />
