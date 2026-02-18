@@ -12,6 +12,7 @@
     <title>Canvas 1</title>
     <g id="Canvas_1_Layer_1">
       <title>Layer 1</title>
+      <rect width="32" height="32" fill="#212121"/>
       <g id="Graphic_6">
         <title>Rectangle</title>
         <path d="M 6 0 L 26 0 C 29.31371 20290613e-23 32 2.6862915 32 6 L 32 26 C 32 29.31371 29.31371 32 26 32 L 6 32 C 2.6862915 32 40581225e-23 29.31371 0 26 L 8881784e-22 6 C 12939907e-22 2.6862915 2.6862915 -40581225e-23 6 0 Z" fill="#212121"/>
