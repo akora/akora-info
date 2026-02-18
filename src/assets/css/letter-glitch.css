@@ -12,8 +12,10 @@
     width: 100%;
     height: 32px;
     overflow: hidden;
+    /* Background color is set dynamically via JS to match current theme */
     background-color: #ffffff;
     margin: 0 auto;
+    box-sizing: content-box;
 }
 
 .dark .glitch-container {
@@ -24,33 +26,18 @@
     height: 48px;
     margin: 32px auto 4px auto !important;
     padding: 8px 0;
-    background-color: #ffffff;
-}
-
-.dark .glitch-container.lines-2 {
-    background-color: #121212;
 }
 
 .glitch-container.lines-3 {
     height: 64px;
     margin: 20px auto 4px auto;
     padding: 12px 0;
-    background-color: #ffffff;
-}
-
-.dark .glitch-container.lines-3 {
-    background-color: #121212;
 }
 
 .glitch-container.lines-4 {
     height: 80px;
     margin: 24px auto 4px auto;
     padding: 16px 0;
-    background-color: #ffffff;
-}
-
-.dark .glitch-container.lines-4 {
-    background-color: #121212;
 }
 
 .letter {
@@ -63,16 +50,6 @@
     z-index: 1;
 }
 
-/* Light mode colors (default) */
-.letter.color-1 { color: #6366f1; }
-.letter.color-2 { color: #8b5cf6; }
-.letter.color-3 { color: #4c1d95; }
-
-/* Dark mode colors */
-.dark .letter.color-1 { color: #5e4491; }
-.dark .letter.color-2 { color: #A476FF; }
-.dark .letter.color-3 { color: #241a38; }
-
 .vignette-outer {
     position: absolute;
     top: 0;
@@ -81,41 +58,5 @@
     height: 100%;
     pointer-events: none;
     z-index: 10;
-    /* Light mode - reversed vignette (dark center to light edges) */
-    background: linear-gradient(to right, 
-        rgba(255,255,255,0.8) 0%, 
-        rgba(255,255,255,0.4) 15%, 
-        rgba(255,255,255,0.1) 35%, 
-        rgba(255,255,255,0) 50%, 
-        rgba(255,255,255,0.1) 65%, 
-        rgba(255,255,255,0.4) 85%, 
-        rgba(255,255,255,0.8) 100%);
-}
-
-/* Dark mode - original vignette */
-.dark .vignette-outer {
-    background: linear-gradient(to right, 
-        rgba(18,18,18,0.8) 0%, 
-        rgba(18,18,18,0.4) 15%, 
-        rgba(18,18,18,0.1) 35%, 
-        rgba(18,18,18,0) 50%, 
-        rgba(18,18,18,0.1) 65%, 
-        rgba(18,18,18,0.4) 85%, 
-        rgba(18,18,18,0.8) 100%);
-}
-
-.vignette-center {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    /* Light mode - reversed center vignette (dark center to light edges) */
-    background: radial-gradient(circle, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 60%);
-}
-
-/* Dark mode - original center vignette */
-.dark .vignette-center {
-    background: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%);
+    /* Gradient is set dynamically via JS using hexToRgb() for theme accuracy */
 }

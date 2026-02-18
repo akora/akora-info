@@ -26,17 +26,14 @@ class LetterGlitch {
         // Use provided colors or cycle through schemes
         if (options.glitchColors && options.glitchColors.length > 0 && options.glitchColors[0] !== '') {
             this.glitchColors = options.glitchColors;
-            console.log('LetterGlitch: Using provided colors:', this.glitchColors);
         } else if (options.useRandomScheme !== false) {
             // Cycle through schemes using session storage to persist across reloads
             const currentIndex = parseInt(sessionStorage.getItem('letterGlitchSchemeIndex') || '0');
             const nextIndex = (currentIndex + 1) % this.colorSchemes.length;
             sessionStorage.setItem('letterGlitchSchemeIndex', nextIndex.toString());
             this.glitchColors = this.colorSchemes[nextIndex];
-            console.log('LetterGlitch: Using cycled scheme (index', nextIndex, '):', this.glitchColors);
         } else {
             this.glitchColors = this.colorSchemes[0]; // Default to first scheme
-            console.log('LetterGlitch: Using default scheme:', this.glitchColors);
         }
 
         this.glitchSpeed = options.glitchSpeed || 33;
@@ -47,7 +44,7 @@ class LetterGlitch {
         this.letters = [];
         this.grid = { columns: 0, rows: 0 };
         this.lastGlitchTime = Date.now();
-        
+
         this.lettersAndSymbols = [
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -55,8 +52,27 @@ class LetterGlitch {
             '[', ']', '{', '}', ';', ':', '<', '>', ',',
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
         ];
-        
+
         this.init();
+    }
+
+    hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result
+            ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) }
+            : { r: 16, g: 16, b: 16 };
+    }
+
+    isDarkMode() {
+        return document.documentElement.classList.contains('dark');
+    }
+
+    getThemeBackgroundColor() {
+        return this.isDarkMode() ? '#121212' : '#ffffff';
+    }
+
+    getThemeVignetteColor() {
+        return this.isDarkMode() ? '#121212' : '#ffffff';
     }
 
     getRandomChar() {
@@ -75,21 +91,35 @@ class LetterGlitch {
 
     initializeLetters(columns, rows, paddingTop = 0) {
         this.grid = { columns, rows };
-        this.container.innerHTML = '<div class="vignette-outer"></div>';
+        this.container.innerHTML = '';
         this.letters = [];
-        
+
+        // Create vignette with dynamic gradient based on current theme
+        const { r, g, b } = this.hexToRgb(this.getThemeVignetteColor());
+        const vignette = document.createElement('div');
+        vignette.className = 'vignette-outer';
+        vignette.style.background = `linear-gradient(to right,
+            rgba(${r},${g},${b},0.8) 0%,
+            rgba(${r},${g},${b},0.4) 15%,
+            rgba(${r},${g},${b},0.1) 35%,
+            rgba(${r},${g},${b},0) 50%,
+            rgba(${r},${g},${b},0.1) 65%,
+            rgba(${r},${g},${b},0.4) 85%,
+            rgba(${r},${g},${b},0.8) 100%)`;
+        this.container.appendChild(vignette);
+
         const totalLetters = columns * rows;
         for (let i = 0; i < totalLetters; i++) {
             const letter = document.createElement('div');
             letter.className = 'letter';
             letter.textContent = this.getRandomChar();
             letter.style.color = this.getRandomColor();
-            
+
             const x = (i % columns) * this.charWidth;
             const y = Math.floor(i / columns) * this.charHeight + paddingTop;
             letter.style.left = x + 'px';
             letter.style.top = y + 'px';
-            
+
             this.container.appendChild(letter);
             this.letters.push({
                 element: letter,
@@ -100,25 +130,24 @@ class LetterGlitch {
         }
     }
 
+    updateThemeColors() {
+        this.container.style.backgroundColor = this.getThemeBackgroundColor();
+    }
+
     updateLetters() {
         if (this.letters.length === 0) return;
-        
+
         const updateCount = Math.max(1, Math.floor(this.letters.length * 0.05));
         for (let i = 0; i < updateCount; i++) {
             const index = Math.floor(Math.random() * this.letters.length);
             const letter = this.letters[index];
-            
+
             if (!letter) continue;
-            
+
             letter.char = this.getRandomChar();
             letter.targetColor = this.getRandomColor();
             letter.element.textContent = letter.char;
-            
-            if (this.smooth) {
-                letter.element.style.color = letter.targetColor;
-            } else {
-                letter.element.style.color = letter.targetColor;
-            }
+            letter.element.style.color = letter.targetColor;
         }
     }
 
@@ -128,37 +157,48 @@ class LetterGlitch {
             this.updateLetters();
             this.lastGlitchTime = now;
         }
-        
+
         requestAnimationFrame(() => this.animate());
     }
 
     resize() {
         const rect = this.container.getBoundingClientRect();
         const width = rect.width;
-        const height = rect.height;
-        
-        // Account for padding when calculating available height
+
         const computedStyle = window.getComputedStyle(this.container);
         const paddingTop = parseInt(computedStyle.paddingTop) || 0;
-        const paddingBottom = parseInt(computedStyle.paddingBottom) || 0;
-        const availableHeight = height - paddingTop - paddingBottom;
-        
+
         const columns = Math.ceil(width / this.charWidth);
-        const rows = this.lines; // Use the lines parameter directly for rows
+        const rows = this.lines;
         this.initializeLetters(columns, rows, paddingTop);
     }
 
     init() {
         // Add lines class to container
         this.container.classList.add(`lines-${this.lines}`);
-        
+
+        // Set initial background color based on current theme
+        this.updateThemeColors();
+
         this.resize();
         this.animate();
-        
+
         window.addEventListener('resize', () => {
             clearTimeout(this.resizeTimeout);
             this.resizeTimeout = setTimeout(() => this.resize(), 100);
         });
+
+        // Watch for dark/light mode changes and re-render with correct colors
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    this.updateThemeColors();
+                    this.resize();
+                    break;
+                }
+            }
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     }
 
     destroy() {
@@ -179,22 +219,14 @@ window.createLetterGlitch = function(containerId, options = {}) {
 // Auto-initialize if data attributes are present
 document.addEventListener('DOMContentLoaded', () => {
     const glitchContainers = document.querySelectorAll('[data-letter-glitch]');
-    console.log('LetterGlitch: Found', glitchContainers.length, 'glitch containers');
-    
-    glitchContainers.forEach((container, index) => {
+
+    glitchContainers.forEach((container) => {
         const options = {};
         const colors = container.dataset.colors;
         const speed = container.dataset.speed;
         const lines = container.dataset.lines;
         const useRandomScheme = container.dataset.useRandomScheme;
-        
-        console.log('LetterGlitch: Container', index, 'data:', {
-            colors,
-            speed,
-            lines,
-            useRandomScheme
-        });
-        
+
         if (colors && colors.trim() !== '') {
             options.glitchColors = colors.split(',').map(c => c.trim());
         }
@@ -207,8 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (useRandomScheme) {
             options.useRandomScheme = useRandomScheme === 'true';
         }
-        
-        console.log('LetterGlitch: Creating instance with options:', options);
+
         new LetterGlitch(container.id, options);
     });
 });
